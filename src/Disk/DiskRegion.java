@@ -1,43 +1,26 @@
 package Disk;
 
-import Initial.IInitial;
 import Initial.On;
+import main.File;
 
-public class DiskRegion extends On {
+public abstract class DiskRegion {
 
-    // all state
-    private IInitial diskIdle;
-    private IInitial alert;
-
-    // current state
-    private IInitial currentState;
-
-    public DiskRegion() {
-        this.diskIdle = new DiskIdle();
-        this.alert = new Alert();
-        // update current state
-        this.currentState = diskIdle;
+    protected On on;
+    public DiskRegion(On on) {
+        this.on = on;
     }
 
-    //<editor-fold desc="getters">
-    public IInitial getDiskIdle() {
-        return diskIdle;
+    public void turnOff() {
+        on.turnOff();
     }
 
-    public IInitial getAlert() {
-        return alert;
+    public void turnOn() {
+        on.turnOn();
     }
 
-    @Override
-    public IInitial getCurrentState() {
-        return currentState;
-    }
-    //</editor-fold>
+    public abstract void fileRequest(File file);
+
+    public abstract void doAction(File file);
 
 
-    @Override
-    public void setCurrentState(IInitial currentState) {
-        this.currentState = currentState;
-        super.setDiskCurrent(currentState);
-    }
 }

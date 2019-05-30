@@ -1,24 +1,27 @@
 package Queue;
 
-import Initial.IInitial;
 import Initial.On;
+import main.File;
 
-public class QueueRegion extends On {
-
-    private IInitial currentState;
+public abstract class QueueRegion {
 
 
-    public QueueRegion() {
-        this.currentState = new MovieQueue();
+    protected On on;
+
+    public QueueRegion(On on) {
+        this.on = on;
     }
 
-    @Override
-    public IInitial getCurrentState() {
-        return currentState;
+
+    public void turnOff() {
+        on.turnOff();
     }
 
-    @Override
-    public void setCurrentState(IInitial currentState) {
-        this.currentState = currentState;
+    public void turnOn() {
+        on.turnOn();
     }
+
+    public abstract void insert(File file);
+    public abstract void downloadAborted(File file);
+
 }

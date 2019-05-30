@@ -1,49 +1,38 @@
 package Downloading;
 
-import Initial.IInitial;
 import Initial.On;
+import main.File;
 
-public class DownloadingRegion extends On {
+public abstract class DownloadingRegion {
 
-    // all states
-    private IInitial downloadingIdle;
-    private IInitial download;
-    private IInitial error;
+    protected boolean paused;
+    protected File file;
+    protected On on;
 
-    // current state
-    private IInitial currentState;
-
-    public DownloadingRegion() {
-        this.downloadingIdle = new DownloadingIdle();
-        this.download = new Download();
-        this.error = new Error();
-        // update current state
-        this.currentState = downloadingIdle;
+    public DownloadingRegion(On on) {
+        this.on = on;
     }
 
-    //<editor-fold desc="getters">
-    @Override
-    public IInitial getCurrentState() {
-        return currentState;
+
+    public void turnOff() {
+        on.turnOff();
     }
 
-    public IInitial getDownloadingIdle() {
-        return downloadingIdle;
+    public void turnOn() {
+        on.turnOn();
     }
 
-    public IInitial getDownload() {
-        return download;
+    public File getFile() {
+        return file;
     }
 
-    public IInitial getError() {
-        return error;
-    }
-    //</editor-fold>
+    public abstract void downloadAborted(File file);
+    public abstract void downloadError();
+    public abstract void errorFixed();
+    public abstract void internetOff();
+    public abstract void internetOn();
+    public abstract void doAction(File file);
 
 
-    @Override
-    public void setCurrentState(IInitial currentState) {
-        this.currentState = currentState;
-        super.setDownloadingCurrent(currentState);
-    }
+
 }

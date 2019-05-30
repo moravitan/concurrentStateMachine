@@ -1,7 +1,5 @@
 package main;
 
-import Initial.IInitial;
-
 public class User {
 
     public enum Status {BEGIN, ADVANCED, PRO}

@@ -6,16 +6,54 @@ import Disk.Disk;
 
 public class DownloadingIdle extends DownloadingRegion {
 
-    private RunnableIdle runnableIdle;
-    private Thread thread;
 
-    public DownloadingIdle() {
-        this.runnableIdle = new RunnableIdle(this,movieDownloader.getDisk());
-        this.thread = new Thread(runnableIdle);
-        thread.start();
+    public DownloadingIdle(On on) {
+        super(on);
     }
 
+    @Override
+    public void turnOff() {
+        super.turnOff();
+    }
 
+    @Override
+    public void turnOn() {
+        super.turnOn();
+    }
+
+    @Override
+    public void downloadAborted(File file) {
+
+    }
+
+    @Override
+    public void downloadError() {
+
+    }
+
+    @Override
+    public void errorFixed() {
+
+    }
+
+    @Override
+    public void internetOff() {
+
+    }
+
+    @Override
+    public void internetOn() {
+        if (paused){
+            System.out.println("exit [DownloadingIdle] state");
+            on.setWatchingCurrent(on.getWatch());
+            System.out.println("enter [Download] state");
+        }
+    }
+
+    @Override
+    public void doAction(File file) {
+
+    }
 
     @Override
     public String toString() {
@@ -23,30 +61,4 @@ public class DownloadingIdle extends DownloadingRegion {
     }
 
 
-}
-
-
-class RunnableIdle implements Runnable{
-
-    private volatile Disk disk;
-    private volatile DownloadingRegion downloadingRegion;
-
-    public RunnableIdle(DownloadingRegion downloadingRegion, Disk disk) {
-        this.disk = disk;
-        this.downloadingRegion = downloadingRegion;
-    }
-
-    @Override
-    public void run() {
-        while (disk.getFiles().size() > 0){
-            File file = disk.getFiles().poll();
-            this.downloadingRegion.setCurrentFileDownloading(file);
-            this.downloadingRegion.setDownloadingCurrent(this.downloadingRegion.getDownload());
-            try {
-                this.downloadingRegion.getCurrentState().doAction(file);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

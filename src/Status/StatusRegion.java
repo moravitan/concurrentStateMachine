@@ -1,66 +1,32 @@
 package Status;
 
-import Initial.IInitial;
 import Initial.On;
 import main.User;
 
-public class StatusRegion extends On {
+public abstract class StatusRegion {
 
-    // all states
-    private IInitial begin;
-    private IInitial advanced;
-    private IInitial pro;
+    protected On on;
+    protected User.Status status;
 
-    // current state
-    private IInitial currentState;
-
-    public StatusRegion() {
-        this.begin = new Begin();
-        this.advanced = new Advanced();
-        this.pro = new Pro();
-
-        if(movieDownloader.getUser().getStatus() == User.Status.BEGIN)
-            this.currentState = begin;
-        if(movieDownloader.getUser().getStatus() == User.Status.ADVANCED)
-            this.currentState = advanced;
-        if(movieDownloader.getUser().getStatus() == User.Status.PRO){
-            this.currentState = pro;
-        }
+    public StatusRegion(On on) {
+        this.on = on;
     }
 
 
-    //<editor-fold desc="getters">
-    public IInitial getBegin() {
-        return begin;
+    public void turnOff() {
+        on.turnOff();
     }
 
-    public IInitial getAdvanced() {
-        return advanced;
-    }
-
-    public IInitial getPro() {
-        return pro;
+    public void turnOn() {
+        on.turnOn();
     }
 
     @Override
-    public IInitial getCurrentState() {
-        return currentState;
-    }
-    //</editor-fold>
-
-
-    @Override
-    public void setCurrentState(IInitial currentState) {
-        if(movieDownloader.getUser().getStatus() == User.Status.BEGIN)
-            this.currentState = begin;
-        if(movieDownloader.getUser().getStatus() == User.Status.ADVANCED)
-            this.currentState = advanced;
-        if(movieDownloader.getUser().getStatus() == User.Status.PRO){
-            this.currentState = pro;
+    public boolean equals(Object obj) {
+        if (obj instanceof StatusRegion){
+            StatusRegion statusRegion = (StatusRegion) obj;
+            return this.status == statusRegion.status;
         }
-        super.setStatusCurrent(this.currentState);
-
+        return false;
     }
-
-
 }

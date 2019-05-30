@@ -6,61 +6,68 @@ import main.File;
 public class Pause extends WatchingRegion{
 
     private File file;
-    public Pause() { }
+    public Pause(On on) {
+        super(on);
+    }
 
     @Override
     public void movieOn(File file) {
-        System.out.println("This event isn't available from this state");
     }
 
     @Override
     public void downloadError() {
-        System.out.println("This event isn't available from this state");
 
     }
 
     @Override
-    public void errorFixed() throws InterruptedException {
+    public void errorFixed()  {
         System.out.println("exit [Watching.Pause] state");
-        super.setWatchingCurrent(super.getWatch());
+        on.setWatchingCurrent(on.getWatch());
         System.out.println("enter [Watching.Watch] state");
-        super.getCurrentState().doAction(file);
+        on.getWatchingCurrent().doAction(file);
     }
 
     @Override
-    public void resume(File file) throws InterruptedException {
+    public void resume(File file) {
         this.file = file;
-        super.setWatchingCurrent(super.getWatch());
-        super.getCurrentState().doAction(file);
+        on.setWatchingCurrent(on.getWatch());
+        on.getWatchingCurrent().doAction(file);
     }
 
     @Override
     public void holdMovie() {
-        System.out.println("This event isn't available from this state");
 
     }
 
     @Override
     public void restartMovie() {
-        System.out.println("This event isn't available from this state");
 
     }
 
 
-
-    @Override
-    public void turnOff() {
-        super.turnOff();
-    }
-
-    @Override
-    public void turnOn() {
-        super.turnOn();
-    }
 
     @Override
     public void internetOff() {
-        super.internetOff();
+    }
+
+    @Override
+    public void internetOn() {
+        if (paused){
+            paused = false;
+            System.out.println("exit [Pause] state");
+            on.setWatchingCurrent(on.getWatch());
+            System.out.println("enter [Watch] state");
+        }
+    }
+
+    @Override
+    public void doAction(File file) {
+
+    }
+
+    @Override
+    public void movieOff() {
+
     }
 
     @Override

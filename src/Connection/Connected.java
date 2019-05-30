@@ -6,12 +6,23 @@ import main.File;
 public class Connected extends ConnectionRegion {
 
 
-    public Connected(){ }
+    public Connected(On on) {
+        super(on);
+    }
 
     @Override
     public void internetOn() {
-        System.out.println("This event isn't available from this state");
     }
+
+    @Override
+    public void internetOff(){
+        on.setConnected(false);
+        System.out.println("exit [Connected] state");
+        on.setConnectedCurrent(on.getDisconnected());
+        System.out.println("enter [Disconnected] state");
+
+    }
+
 
 
     @Override

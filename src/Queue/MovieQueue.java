@@ -1,48 +1,50 @@
 package Queue;
 
-import Disk.DiskRegion;
+import Downloading.Download;
+import Downloading.DownloadingRegion;
 import Initial.On;
 import main.File;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class MovieQueue extends QueueRegion {
 
+    public static Queue<File> queue;
 
-    public MovieQueue() { }
+    public MovieQueue(On on) {
+        super(on);
+        this.queue = new LinkedList<>();
+    }
 
 
     @Override
     public void insert(File file) {
-        disk.addFile(file);
-        System.out.println("enter [Movie Queue] state");
+        this.queue.add(file);
+        System.out.println("enter [MovieQueue] state");
+        if (on.isConnected() && !(on.getDownloadingCurrent() instanceof Download)){
+            System.out.println("exit [DownloadingIdle] state");
+            on.setDownloadingCurrent(on.getDownload());
+            on.setCurrentFileDownloading(this.queue.poll());
+            System.out.println("enter [Download] state");
+            on.getDownloadingCurrent().doAction(on.getCurrentFileDownloading());
+        }
     }
 
     @Override
     public void downloadAborted(File file) {
-        System.out.println("exit [Movie Queue] state");
-        disk.removeFile(file);
-        super.setCurrentState(super.getCurrentState());
+        System.out.println("exit [MovieQueue] state");
+        on.getDisk().removeFile(file);
+        on.setQueueCurrent(on.getMovieQueue());
         System.out.println("enter [Movie Queue] state");
     }
 
-    @Override
-    public void turnOff() {
-        super.turnOff();
-    }
 
-    @Override
-    public void turnOn() {
-        super.turnOn();
-    }
-
-    @Override
-    public void internetOff() {
-        super.internetOff();
-    }
 
     @Override
     public String toString() {
-        return "[Queue.MovieQueue]";
+        return "[MovieQueue]";
     }
 
 }

@@ -1,20 +1,22 @@
 package main;
 
-import Initial.IInitial;
+import Initial.IMovieDownloader;
 import Disk.Disk;
 import Initial.Off;
 import Initial.On;
+import main.File;
+import main.User;
 
 public class MovieDownloader {
 
     private User user;
     private Disk disk;
     // all states
-    private IInitial on;
-    private IInitial off;
+    private IMovieDownloader on;
+    private IMovieDownloader off;
 
     // current states
-    private IInitial initialCurrent;
+    private IMovieDownloader initialCurrent;
 
 
     public MovieDownloader(User user, Disk disk) {
@@ -24,7 +26,7 @@ public class MovieDownloader {
         off = new Off(this);
         initialCurrent = off;
 
-        System.out.println("enter [Initial.Off] state");
+        System.out.println("enter [Off] state");
 
 
     }
@@ -34,7 +36,7 @@ public class MovieDownloader {
         System.out.println(initialCurrent.toString());
     }
 
-    public void InternetOn() {
+    public void internetOn() {
         initialCurrent.internetOn();
     }
 
@@ -47,23 +49,23 @@ public class MovieDownloader {
     }
 
 
-    public void fileRequested(File file) throws InterruptedException {
-        initialCurrent.fileRequested(file);
+    public void fileRequest(File file)  {
+        initialCurrent.fileRequest(file);
     }
 
     public void downloadAborted(File file) {
         initialCurrent.downloadAborted(file);
     }
 
-    public void errorFixed() throws InterruptedException {
+    public void errorFixed() {
         initialCurrent.errorFixed();
     }
 
-    public void movieOn(File file) throws InterruptedException {
+    public void movieOn(File file)  {
         initialCurrent.movieOn(file);
     }
 
-    public void downloadError() throws InterruptedException {
+    public void downloadError()  {
         initialCurrent.downloadError();
     }
 
@@ -71,8 +73,16 @@ public class MovieDownloader {
         initialCurrent.holdMovie();
     }
 
-    public void restartMovie() throws InterruptedException {
+    public void restartMovie() {
         initialCurrent.restartMovie();
+    }
+
+    public void resume(File file){
+        initialCurrent.resume(file);
+    }
+
+    public void movieOff(){
+        initialCurrent.movieOff();
     }
 
 
@@ -85,15 +95,15 @@ public class MovieDownloader {
         return disk;
     }
 
-    public IInitial getOn() {
+    public IMovieDownloader getOn() {
         return on;
     }
 
-    public IInitial getOff() {
+    public IMovieDownloader getOff() {
         return off;
     }
 
-    public IInitial getInitialCurrent() {
+    public IMovieDownloader getInitialCurrent() {
         return initialCurrent;
     }
     //</editor-fold>
@@ -108,15 +118,15 @@ public class MovieDownloader {
         this.disk = disk;
     }
 
-    public void setOn(IInitial on) {
+    public void setOn(IMovieDownloader on) {
         this.on = on;
     }
 
-    public void setOff(IInitial off) {
+    public void setOff(IMovieDownloader off) {
         this.off = off;
     }
 
-    public void setInitialCurrent(IInitial initialCurrent) {
+    public void setInitialCurrent(IMovieDownloader initialCurrent) {
         this.initialCurrent = initialCurrent;
     }
     //</editor-fold>

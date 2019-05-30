@@ -1,49 +1,34 @@
 package Watching;
 
-import Initial.IInitial;
 import Initial.On;
 import main.File;
 
-public class WatchingRegion extends On {
+public abstract class WatchingRegion {
 
-    // all states
-    private IInitial watchingIdle;
-    private IInitial watch;
-    private IInitial pause;
+    protected boolean paused = false;
+    protected On on;
 
-    // current state
-    private IInitial currentState;
-
-    public WatchingRegion() {
-        this.watchingIdle = new WatchingIdle();
-        this.watch = new Watch();
-        this.pause = new Pause();
-        // update current state
-        this.currentState = watchingIdle;
+    public WatchingRegion(On on) {
+        this.on = on;
     }
 
-    //<editor-fold desc="getters">
-    public IInitial getWatchingIdle() {
-        return watchingIdle;
+
+    public void turnOff() {
+        on.turnOff();
     }
 
-    public IInitial getWatch() {
-        return watch;
+    public void turnOn() {
+        on.turnOn();
     }
 
-    public IInitial getPause() {
-        return pause;
-    }
-
-    @Override
-    public IInitial getCurrentState() {
-        return currentState;
-    }
-    //</editor-fold>
-
-    @Override
-    public void setCurrentState(IInitial currentState) {
-        this.currentState = currentState;
-        super.setWatchingCurrent(currentState);
-    }
+    public abstract void movieOn(File file);
+    public abstract void downloadError();
+    public abstract void errorFixed();
+    public abstract void resume(File file);
+    public abstract void holdMovie();
+    public abstract void restartMovie();
+    public abstract void internetOff();
+    public abstract void internetOn();
+    public abstract void doAction(File file);
+    public abstract void movieOff();
 }

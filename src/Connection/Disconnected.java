@@ -4,31 +4,24 @@ import Initial.On;
 
 public class Disconnected extends ConnectionRegion {
 
-
-    public Disconnected(){ }
+    public Disconnected(On on) {
+        super(on);
+    }
 
     @Override
     public void internetOn() {
-        isConnected = true;
+        on.setConnected(true);
         System.out.println("exit [Disconnected] state");
-        super.setCurrentState(super.getConnected());
+        on.setConnectedCurrent(on.getConnected());
         System.out.println("enter [Connected] state");
 
     }
 
-    @Override
-    public void turnOff() {
-        super.turnOff();
-    }
 
-    @Override
-    public void turnOn() {
-        super.turnOn();
-    }
 
     @Override
     public void internetOff() {
-        super.internetOff();
+
     }
 
     @Override

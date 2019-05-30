@@ -1,5 +1,6 @@
 package Disk;
 
+
 import Initial.On;
 import main.File;
 
@@ -7,25 +8,33 @@ import java.util.concurrent.TimeUnit;
 
 public class Alert extends DiskRegion {
 
-    public Alert() { }
+
+    public Alert(On on) {
+        super(on);
+    }
 
     @Override
-    public void doAction(File file) throws InterruptedException {
-        TimeUnit.SECONDS.sleep(4);
-        if (disk.getSpace() < file.getSize()) {
-            disk.removeFile(file);
+    public void doAction(File file)  {
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (InterruptedException e) { }
+        if (on.getDisk().getSpace() < file.getSize()) {
+            on.getDisk().removeFile(file);
         } else {
-            super.getQueueCurrent().insert(file);
-            super.setQueueCurrent(super.getQueueRegion());
+            on.getQueueCurrent().insert(file);
+            on.setQueueCurrent(on.getMovieQueue());
         }
-        super.setCurrentState(super.getDiskIdle());
+        System.out.println("exit [Alert] state");
+        on.setDiskCurrent(on.getDiskIdle());
+        System.out.println("enter [DiskIdle] state");
 
     }
 
     @Override
-    public void fileRequested(File file) {
-        System.out.println("This event isn't available from this state");
+    public void fileRequest(File file) {
     }
+
+
 
     @Override
     public void turnOff() {
@@ -35,16 +44,6 @@ public class Alert extends DiskRegion {
     @Override
     public void turnOn() {
         super.turnOn();
-    }
-
-    @Override
-    public void internetOff() {
-        super.internetOff();
-    }
-
-    @Override
-    public void internetOn() {
-        super.internetOn();
     }
 
     @Override

@@ -1,42 +1,25 @@
 package Connection;
 
-import Initial.IInitial;
 import Initial.On;
 
-public class ConnectionRegion extends On {
+public abstract class ConnectionRegion {
 
-    // all states
-    private IInitial connected;
-    private IInitial disconnected;
-    // current state
-    private IInitial currentState;
 
-    public ConnectionRegion() {
-        this.connected = new Connected();
-        this.disconnected = new Disconnected();
-        // update current
-        this.currentState = disconnected;
+    protected On on;
+
+    public ConnectionRegion(On on) {
+        this.on = on;
     }
 
-    //<editor-fold desc="getters">
-    public IInitial getConnected() {
-        return connected;
+    public abstract void internetOn();
+    public abstract void internetOff();
+
+    public void turnOff() {
+        on.turnOff();
     }
 
-    public IInitial getDisconnected() {
-        return disconnected;
+    public void turnOn() {
+        on.turnOn();
     }
 
-    @Override
-    public IInitial getCurrentState() {
-        return currentState;
-    }
-    //</editor-fold>
-
-
-    @Override
-    public void setCurrentState(IInitial currentState) {
-        this.currentState = currentState;
-        super.setConnectedCurrent(currentState);
-    }
 }

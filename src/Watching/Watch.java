@@ -6,11 +6,12 @@ import main.File;
 
 public class Watch extends WatchingRegion {
 
-    private RunnableWatch runnableWatch;
-    private Thread thread;
+
     private File file;
 
-    public Watch() {
+    public Watch(On on) {
+        super(on);
+        paused = false;
     }
 
     @Override
@@ -20,7 +21,7 @@ public class Watch extends WatchingRegion {
 
     @Override
     public void downloadError() {
-        super.setWatchingCurrent(super.getPause());
+        on.setWatchingCurrent(on.getPause());
     }
 
     @Override
@@ -37,31 +38,37 @@ public class Watch extends WatchingRegion {
     @Override
     public void holdMovie() {
         System.out.println("exit [Watching.Watch] state");
-        runnableWatch.holdMovie();
-        super.setCurrentState(super.getPause());
+        on.setWatchingCurrent(on.getPause());
     }
 
     @Override
-    public void restartMovie() throws InterruptedException {
+    public void restartMovie() {
         System.out.println("exit [Watching.Watch] state");
-        time = 0;
-        super.setWatchingCurrent(super.getWatch());
-        super.getWatchingCurrent().doAction(this.file);
+        on.setTime(0);
+        on.setWatchingCurrent(on.getWatch());
+        on.getWatchingCurrent().doAction(this.file);
 
     }
 
     @Override
-    public void doAction(File file) throws InterruptedException {
+    public void doAction(File file) {
         this.file = file;
-        runnableWatch = new RunnableWatch(this, file, time);
-        thread = new Thread(runnableWatch);
-        thread.start();
-        thread.join();
-        if (super.getDownloadingCurrent() instanceof DownloadingIdle){
-            super.setCurrentState(super.getWatchingIdle());
+        while (on.getTime() < file.getTime() && !paused && file.getStatus() < 100.0
+                && (on.getDownloadingCurrent() instanceof DownloadingIdle)) {
+            on.setTime(on.getTime() + 1);
+        }
+        if (on.getDownloadingCurrent() instanceof DownloadingIdle) {
+            on.setWatchingCurrent(on.getWatchingIdle());
         }
 
 
+    }
+
+    @Override
+    public void movieOff() {
+        System.out.println("exit [Watch] state");
+        on.setWatchingCurrent(on.getWatchingIdle());
+        System.out.println("enter [WatchingIdle] state");
     }
 
     @Override
@@ -76,42 +83,19 @@ public class Watch extends WatchingRegion {
 
     @Override
     public void internetOff() {
-        super.internetOff();
+        this.paused = true;
+        System.out.println("exit [Watch] state");
+        on.setWatchingCurrent(on.getPause());
+        System.out.println("enter [Pause] state");
+    }
+
+    @Override
+    public void internetOn() {
+
     }
 
     @Override
     public String toString() {
         return "[Watch]";
     }
-}
-
-class RunnableWatch implements Runnable {
-
-    private volatile On on;
-    private volatile File file;
-    private double time;
-    private volatile boolean paused;
-
-
-    public RunnableWatch(On on, File file, double time) {
-        this.file = file;
-        this.time = time;
-        this.paused = false;
-        this.on = on;
-    }
-
-    @Override
-    public void run() {
-        while (time < file.getTime() && !paused && file.getStatus() < 100.0
-                && (this.on.getDownloadingCurrent() instanceof DownloadingIdle)) {
-            time++;
-        }
-    }
-
-    public void holdMovie() {
-        paused = true;
-
-    }
-
-
 }
